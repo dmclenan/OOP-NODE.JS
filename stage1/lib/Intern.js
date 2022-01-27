@@ -6,7 +6,7 @@ const Employee = require("./Employee.js")
       this.school = school;
     }
     getRole() {
-      return "school"
+      return "intern"
     }
     getschool() {
       return this.school;
