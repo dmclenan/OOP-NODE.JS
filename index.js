@@ -1,12 +1,12 @@
-const Manager = require("./stage1/lib/Manager");
-const Engineer = require("./stage1/lib/Engineer");
-const Intern = require("./stage1/lib/Intern");
+const Manager = require("./lib/Manager");
+const Engineer = require("./lib/Engineer");
+const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 const dist = path.resolve(__dirname, "dist");
-const distPath = path.join(dist, "team.html")
-const render = render()
+const distPath = path.join(dist, "team.html");
+const render = render("./src/templet.js");
 // Function for creating manager
 team = [];
 
