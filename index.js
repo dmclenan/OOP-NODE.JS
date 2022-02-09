@@ -6,7 +6,7 @@ const path = require("path");
 const fs = require("fs");
 const dist = path.resolve(__dirname, "dist");
 const distPath = path.join(dist, "team.html");
-const render = render("./src/templet.js");
+const render = require("./src/templet.js");
 // Function for creating manager
 team = [];
 
@@ -37,34 +37,44 @@ function createManager() {
             name: "officeNumber",
             message: "Enter the managers officeNumber",
         },
-        {
-            type: "list",
-            name: "role",
-            message: "What employees would you like to add?",
-            choices: ["Engineer", "Intern", "Manager", "quit"]
-        }
+
 
 
     ])
 
         .then(({ name, id, email, officeNumber, role }) => {
             const manager = new Manager(name, id, email, officeNumber);
-            team.push(generateManager(manager))
+            team.push(manager)
+            createTeam();
             //console.log(role);
             //console.log(manager);
-            if (role == 'Engineer') {
-                addEngineer()
-            }
-            else if (role == 'Intern') {
-                addIntern()
-            }
-            else if (role == 'Manager') {
-                createManager()
-            }
-            else {
-                buildHtml()
-            }
+
         });
+}
+
+function createTeam() {
+    inquirer.prompt([
+        {
+
+            type: "list",
+            name: "role",
+            message: "What employees would you like to add?",
+            choices: ["Engineer", "Intern", "quit"]
+
+        }
+    ])
+    .then((choice)  =>{
+        if (choice.role == 'Engineer') {
+        addEngineer()
+    }
+    else if (choice.role == 'Intern') {
+        addIntern()
+    }
+    else {
+        generateTeam()
+    }
+    })
+    
 }
 
 function addEngineer() {
@@ -97,7 +107,7 @@ function addEngineer() {
     ]).then(answers => {
         const engineer = new Engineer(answers.engineerName, answers.engineerId, answers.engineerEmail, answers.engineerGithub);
         team.push(engineer);
-        addIntern();
+        createTeam();
     });
 
 }
@@ -131,11 +141,17 @@ function addIntern() {
 
     ]).then(answers => {
         const intern = new Intern(answers.internName, answers.internId, answers.internEmail, answers.internSchool);
-        team.push(generateIntern(intern));
-        addIntern();
+        team.push(intern);
+        createTeam();
     });
 
 }
+function generateTeam() {
+    if (!fs.existsSync(dist)){
+        fs.mkdirSync(dist)
+    }
+    fs.writeFileSync(distPath,render(team),'utf-8')
+};
 
 
 
